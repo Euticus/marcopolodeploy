@@ -10,6 +10,7 @@ const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
+
 io.on('connection', (socket) => {
   console.log("we got something!")
   socket.on('dataToServer', (data) => console.log(data))
@@ -17,7 +18,13 @@ io.on('connection', (socket) => {
       console.log('user has left!')})
 })
 
+
+
+
+
+
 app.use(router)
+
 
 server.listen(PORT, () => console.log(`server has started on ${PORT}`))
 

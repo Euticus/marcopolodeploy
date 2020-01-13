@@ -10,16 +10,19 @@ let socket;
 
 const Game = () => {
 	const [userId, setUserID] = useState('')
-    const [location, setLocation] = useState('')
-    const ENDPOINT = 'https://localhost:5000'
+	const [location, setLocation] = useState('')
+    const ENDPOINT = '10.9.104.222:5000'
+
     
     useEffect(() => {
-        socket = io(ENDPOINT)
-        console.log(location)
+
+		socket = io(ENDPOINT)
+		console.log(location)
+		socket.on('connection', () => console.log('connected yo'))
 
         socket.emit('dataToServer', {location} )
 
-    }, [ENDPOINT, location])
+    }, [location])
 
 
 
