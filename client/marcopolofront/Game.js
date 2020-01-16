@@ -1,34 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View, TouchableOpacity, YellowBox, Vibration } from 'react-native';
+import { Magnetometer } from 'expo-sensors'
+
 import io from 'socket.io-client'
 
 
 YellowBox.ignoreWarnings([
 	'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
 ])
-let socket;
 
-const Game = () => {
+
+const Game = (props) => {
 	const [userId, setUserID] = useState('')
 	const [location, setLocation] = useState('')
-    const ENDPOINT = '10.9.104.222:5000'
+	const [distance, setDistance] = useState(1)
+	const [socket, setSocket] = useState(null)
+	//const [direction, setDirection] = useState('')
+	const ENDPOINT = 'http://10.9.107.113:5000'
 
+	useEffect(() => {
+		setUserID(props.username)
+		let s = io(ENDPOINT)
+		setSocket(s)
+		s.connect()
+	}, [])
     
     useEffect(() => {
+		if (socket !== null ){
+			console.log("location", location)
+			console.log("userId", userId)
+				socket.emit('dataToServer', {userId, location} )	
+				socket.on('broadcast', (obj) => {
+					console.log("dist", obj["dist"])
+					vibrationFunction(obj["dist"])
+				})
+		}
+	}, [location, distance])
+	
+	findDirection = () =>{
+		Magnetometer.addListener(result => {
+			setDirection({ direction: result })
+		})
 
-		socket = io(ENDPOINT)
-		console.log(location)
-		socket.on('connection', () => console.log('connected yo'))
-
-        socket.emit('dataToServer', {location} )
-
-    }, [location])
-
-
+	}
 
 	vibrationFunction = (dist) => {
-		rate = (dist^(-1))^2
-		Vibration.vibrate([rate, rate], true)
+		console.log("its working ITS WORKING!!")
+		setDistance(dist)
+		let rate = (dist + 1)^4 + 100
+		Vibration.vibrate([rate, 200], true)
 	}
 
 
@@ -36,7 +56,6 @@ const Game = () => {
 		navigator.geolocation.getCurrentPosition(
 			position => {
 				const coord = JSON.stringify(position);
-
 				setLocation(coord);
 			},
 			error => Alert.alert(error.message),
@@ -49,6 +68,7 @@ const Game = () => {
 				<TouchableOpacity onPress={findCoordinates}>
 					<Text style={styles.welcome}>Find My Coords?</Text>
 					<Text>Location: {location}</Text>
+			
 				</TouchableOpacity>
 			
 			</View>
