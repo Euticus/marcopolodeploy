@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { Alert, Button, TextInput, View, StyleSheet } from 'react-native';
+import { StyleSheet, Button } from 'react-native';
+import { Card, Surface, Title, Paragraph, TextInput } from 'react-native-paper';
 
 const LoginForm = (props) => {
 
@@ -9,39 +10,42 @@ const LoginForm = (props) => {
         props.onUserChange(user)
     }
     return (
-      <View style={styles.container}>
-        <TextInput
-          value={user}
-          onChange={(e) => {
-              setUser( e.nativeEvent.text )
-            }}
-          placeholder={'Username'}
-          style={styles.input}
-        />       
-        <Button
-          title={'Login'}
-          style={styles.input}
-          onPress={handleSubmit}
-        />
-      </View>
+        <Surface style={styles.surface}>
+                <TextInput
+                    value={user}
+                    onChange={(e) => {
+                        setUser( e.nativeEvent.text )
+                        }}
+                    placeholder={'Username'}
+                /> 
+                <Card.Actions>
+                    <Button
+                        title={'Login'}
+                        onPress={handleSubmit}
+                    />
+                </Card.Actions>      
+        </Surface>
     );
   }
 
 export default LoginForm
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-  },
-  input: {
-    width: 200,
-    height: 44,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'black',
-    marginBottom: 10,
-  },
-});
+    surface: {
+      backgroundColor: '#fff6ac', 
+      padding: 8,
+      height: '100%',
+      width: '100%',
+      marginHorizontal: 130,
+      marginVertical: 220,
+      alignItems: 'center',
+      justifyContent: 'center',
+      elevation: 8,
+      borderColor: '#7e78d2',
+      borderWidth: 1,
+      shadowColor: '#aa3d2c',
+      letterSpacing: 4, 
+      
+    },
+  });

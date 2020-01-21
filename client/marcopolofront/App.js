@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput} from 'react-native';
+import { Avatar, Button, Card, Title, Paragraph, Surface } from 'react-native-paper';
 import Game from './Game'
 import LoginForm from './LoginForm';
 
@@ -24,27 +25,35 @@ export default function App () {
 
 
  handleUsername = (username) => {
- if ( username && username.length > 2 ){
-   setTrueLogin(true)
- } else{
-   alert("you gotta enter a username")
- }
- }
+  if ( username && username.length > 2 ){
+    setTrueLogin(true)}
+  }
     return (
-      <View style={styles.container}>
-       {trueLogin ?
-          <Game username={username} /> :
+      <Surface style={styles.surface}>
+          {trueLogin ?
+            <Game username={username} /> :
             <LoginForm onUserChange={(username) => setUsername(username)}/>
           } 
-      </View>
+      </Surface>
     );
 }
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+  surface: {
+    backgroundColor: '#fff6ac', 
+    padding: 8,
+    height: '100%',
+    width: '100%',
+    marginHorizontal: 130,
+    marginVertical: 220,
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 8,
+    borderColor: '#7e78d2',
+    borderWidth: 1,
+    shadowColor: '#aa3d2c',
+    letterSpacing: 4, 
+    
   },
 });
