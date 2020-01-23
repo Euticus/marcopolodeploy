@@ -8,20 +8,21 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@material-ui/core": "^4.8.3",
-    "@material-ui/styles": "^4.8.2",
+    "@material-ui/core": "4.8.3",
+    "@material-ui/styles": "4.8.2",
+    "@types/react-native": "^0.61.2",
     "engine.io-client": "github:socketio/engine.io-client#3.3.2",
-    "expo": "~36.0.0",
-    "expo-sensors": "~8.0.0",
-    "react": "~16.9.0",
-    "react-dom": "~16.9.0",
+    "expo": "36.0.0",
+    "expo-sensors": "8.0.0",
+    "react": "16.9.0",
+    "react-dom": "16.9.0",
     "react-native": "0.61.5",
-    "react-native-paper": "^3.4.0",
+    "react-native-paper": "3.4.0",
     "react-native-quiet": "0.0.3",
-    "react-native-simple-compass": "^1.0.0",
-    "react-native-web": "~0.11.7",
-    "react-router": "^5.1.2",
-    "socket.io-client": "2.1.1"
+    "react-native-simple-compass": "1.0.0",
+    "react-native-web": "0.11.7",
+    "react-router": "5.1.2",
+    "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

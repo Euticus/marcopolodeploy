@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View, TouchableOpacity, YellowBox, Vibration } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, Surface } from 'react-native-paper';
-
-
+//import  RNQuiet  from 'react-native-quiet'
 import io from 'socket.io-client'
 
 
@@ -17,10 +16,12 @@ const Game = (props) => {
 	const [distance, setDistance] = useState(1)
 	const [rate, setRate] = useState(1)
 	const [socket, setSocket] = useState(null)
+	const [button, setButton] = useState(true)
 	//const [direction, setDirection] = useState('')
-	const ENDPOINT = 'http://10.9.106.100:5000/'
+	const ENDPOINT = 'http://10.9.110.112:5000/'
     // const ENDPOINT = 'https://marcopolo-marcopoloforreal.azurewebsites.net'
 	useEffect(() => {
+		console.log("component mounted")
 		setUserID(props.username)
 		let s = io(ENDPOINT)
 		setSocket(s)
@@ -28,69 +29,94 @@ const Game = (props) => {
 	}, [])
     
     useEffect(() => {
+		findCoordinates()
 		if (socket !== null ){
+			console.log("anything???")
 			console.log("location", location)
 			console.log("userId", userId)
+			console.log("distance", distance)
+			console.log("rate", rate)
 				socket.emit('dataToServer', {userId, location} )	
 				socket.on('broadcast', (obj) => {
-					console.log("dist", obj["dist"])
-					vibrationFunction(obj["dist"])
+					setDistance(obj["dist"])
+					vibrationFunction(obj)
 				})
 		}
-	}, [location, distance, rate])
+	}, [ button ])
 	
+
 	// findDirection = () =>{
 	// 	Magnetometer.addListener(result => {
 	// 		setDirection({ direction: result })
 	// 	})
-
 	// }
 
-	const vibrationFunction = (dist) => {
+
+// Start listening. (This will ask for microphone permissions!)
+// RNQuiet
+//   .start('ultrasonic-experimental')
+//   .then(
+//     () => {
+//       // Listen for Messages.
+// 	  const { unsubscribe } = RNQuiet.addListener(msg => console.log("listening", msg)
+// 		/* do something with received message */);
+//       // Send Messages. (Careful; you can hear your own!)
+//       RNQuiet.send(
+// 		console.log("sending", distance),
+//         {distance},
+//       );
+//       // Stop listening.
+//       RNQuiet.stop();
+//       // Release the observer.
+//       unsubscribe();
+//     },
+//   )
+//   .catch((error)=>{
+// 	console.log("eroor hitting the front end");
+// 	alert(error.message);
+//  });
+
+
+	const vibrationFunction = () => {
 		console.log("its working ITS WORKING!!")
-		setDistance(dist)
-		setRate(1000)
-	    if (dist < 0.001){
-			setRate(50)
-			Vibration.vibrate([50, 200], true)
-		} else if( dist < 0.01){
-			setRate(150)
-			Vibration.vibrate([150, 200], true)
-		} else if( dist < 0.1){
-			setRate(450)
-			Vibration.vibrate([450, 200], true)
-		} else if( dist < 1){
-			setRate(1000)
-			Vibration.vibrate([1000, 200], true)
-		}
+		let newRate = 100*(Math.log(100*distance))
+		setRate(newRate)
+		Vibration.vibrate([rate, 200], true)
 	}
 
 
 	const findCoordinates = () => {
-		navigator.geolocation.getCurrentPosition(
-			position => {
-				const coord = JSON.stringify(position);
-				setLocation(coord);
-			},
-			error => Alert.alert(error.message),
-			{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-		);
+		console.log("hitting findCoordinates")
+			navigator.geolocation.getCurrentPosition(
+				position => {
+					const coord = JSON.stringify(position);
+					setLocation(coord);
+				},
+				error => Alert.alert(error.message),
+				{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+			);
 	};
+	console.log("rate", rate)
+	console.log("button", button)
+	console.log("distance", distance)
+	console.log("location", location)
+	console.log("userID", userId)
 
 		return (
 			<Surface style={styles.surface}>	
-					<Title>thanks for playing marcopolo </Title>
-					<Paragraph>welcome {userId} </Paragraph>		
-					<TouchableOpacity onPress={findCoordinates}>
-						<Text >How far outis the other player?</Text>
-						<Text>Distance: {distance}  </Text>
-						<Text>Rate: {rate}  </Text>
+					<Title>Thanks for playing Marcopolo </Title>
+					<Paragraph>Welcome {userId} </Paragraph>		
+					<TouchableOpacity onPress={() => setButton(!button)} >	
+						<Text> Click here to update Location!</Text>
+						<Text> Distance: {distance} </Text>
 					</TouchableOpacity>
-						
 			</Surface>
 		);
 	}
-
+	
+	//<Text>How far out is the other player?</Text>
+	//<Text>Distance: {distance} </Text>
+	//
 
 export default Game
 
@@ -98,11 +124,11 @@ export default Game
 const styles = StyleSheet.create({
 	surface: {
 	  backgroundColor: '#fff6ac', 
-	  padding: 8,
-	  height: '100%',
-	  width: '100%',
-	  marginHorizontal: 130,
-	  marginVertical: 220,
+	  padding: 1,
+	  height: '75%',
+	  width: '75%',
+	  marginHorizontal: 80,
+	  marginVertical: 110,
 	  alignItems: 'center',
 	  justifyContent: 'center',
 	  elevation: 8,

@@ -42,11 +42,11 @@ export default function App () {
 const styles = StyleSheet.create({
   surface: {
     backgroundColor: '#fff6ac', 
-    padding: 8,
-    height: '100%',
-    width: '100%',
-    marginHorizontal: 130,
-    marginVertical: 220,
+    padding: 1,
+    height: '75%',
+    width: '75%',
+    marginHorizontal: 70,
+    marginVertical: 110,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 8,
